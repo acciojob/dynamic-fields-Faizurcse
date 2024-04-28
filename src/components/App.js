@@ -1,53 +1,90 @@
+import React from 'react';
+import { Box, Button, Grid, TextField } from '@mui/material';
 
-import React from "react";
-import "./../styles/App.css";
+function App() {
+  const [name, setName] = React.useState('');
+  const [age, setAge] = React.useState();
+  const [more, setMore] = React.useState([1]);
 
-const App = () => {
-  const addInput = () => {
-    const container = document.getElementById("container");
-    const newInput = document.createElement("div");
-    newInput.innerHTML = `<input type="text" placeholder="Name" /><input type="number" placeholder="Age" /><button>Remove</button>`;
-    container.appendChild(newInput);
-
-    const removeButtons = document.querySelectorAll("button");
-    removeButtons.forEach((button) => {
-      button.addEventListener("click", () => {
-        container.removeChild(button.parentElement);
-      });
-    });
-  };
-
-  function mydata(event){
-    event.preventDefault();
-    const a = document.getElementById('name')
-    const b = document.getElementById('age')
-
-    const obj = {
-      name : a.value,
-      age : b.value
-    }
-    console.log(obj)
+  function handle(index) {
+    const newarr = [...more];
+    newarr.splice(index, 1);
+    setMore(newarr);
   }
 
+  function addMore() {
+    setMore([...more, 1]);
+  }
+
+  function handleName(e) {
+    setName(e.target.value);
+  }
+
+  function HandleNum(e) {
+    setAge(e.target.value);
+  }
+
+  function handleSubmit() {
+    const obj = {
+      Name: name,
+      Age: age
+    };
+
+    console.log(obj);
+  }
 
   return (
-    <div>
-      <form onSubmit={mydata}>
-        <div id="container">
-          <div>
-            <input id='name' type="text" placeholder="Name" />
-            <input id='age' type="number" placeholder="Age" />
-            <button>Remove</button>
-          </div>
-        </div>
-        <button type="button" onClick={addInput}>
-          Add More
-        </button>
-        <button type="submit">Submit</button>
-      </form>
-    </div>
+    <Grid container justifyContent="center">
+      <Grid item xs={12} lg={6}>
+        <Box p={4} bgcolor="pink" borderRadius={10}>
+          {more.map((item, index) => (
+            <Box key={index}>
+              <TextField
+                sx={{ marginBottom: '10px' }}
+                label="Name"
+                variant="outlined"
+                size="small"
+                onChange={handleName}
+                value={name}
+                name="name"
+              />
+              <TextField
+                sx={{ marginBottom: '5px' }}
+                label="Age"
+                variant="outlined"
+                size="small"
+                type="number"
+                onChange={HandleNum}
+                value={age}
+                name="age"
+              />
+              <Button
+                sx={{ marginBottom: '5px' }}
+                variant="contained"
+                size="small"
+                onClick={() => handle(index)}
+              >
+                Remove
+              </Button>
+            </Box>
+          ))}
+          <Box>
+            <Button variant="contained" size="small" onClick={addMore}>
+              Add More...
+            </Button>
+            <Button
+              sx={{ marginLeft: '5px' }}
+              variant="contained"
+              size="small"
+              onClick={handleSubmit}
+            >
+              Submit
+            </Button>
+          </Box>
+        </Box>
+      </Grid>
+    </Grid>
   );
-};
+}
 
 export default App;
-
