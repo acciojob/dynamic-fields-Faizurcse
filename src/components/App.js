@@ -1,53 +1,63 @@
-
-import React from "react";
+import React, { useState } from "react";
 import "./../styles/App.css";
 
-const App = () => {
-  const addInput = () => {
-    const container = document.getElementById("container");
-    const newInput = document.createElement("div");
-    newInput.innerHTML = `<input type="text" placeholder="Name" /><input type="number" placeholder="Age" /><button>Remove</button>`;
-    container.appendChild(newInput);
+function App() {
+  const [formFields, setFormFields] = useState([{ name: "", age: "" }]);
 
-    const removeButtons = document.querySelectorAll("button");
-    removeButtons.forEach((button) => {
-      button.addEventListener("click", () => {
-        container.removeChild(button.parentElement);
-      });
-    });
+  const handleFormChange = (event, index) => {
+    let data = [...formFields];
+    data[index][event.target.name] = event.target.value;
+    setFormFields(data);
   };
 
-  function mydata(event){
-    event.preventDefault();
-    const a = document.getElementById('name')
-    const b = document.getElementById('age')
+  const submit = (e) => {
+    e.preventDefault();
+    console.log(formFields);
+  };
 
-    const obj = {
-      name : a.value,
-      age : b.value
-    }
-    console.log(obj)
-  }
+  const addFields = () => {
+    let object = {
+      name: "",
+      age: "",
+    };
 
+    setFormFields([...formFields, object]);
+  };
+
+  const removeFields = (index) => {
+    let data = [...formFields];
+    data.splice(index, 1);
+    setFormFields(data);
+  };
 
   return (
-    <div>
-      <form onSubmit={mydata}>
-        <div id="container">
-          <div>
-            <input id='name' type="text" placeholder="Name" />
-            <input id='age' type="number" placeholder="Age" />
-            <button>Remove</button>
-          </div>
-        </div>
-        <button type="button" onClick={addInput}>
-          Add More
-        </button>
-        <button type="submit">Submit</button>
+    <div className="App">
+      <form onSubmit={submit}>
+        {formFields.map((form, index) => {
+          return (
+            <div key={index}>
+              <input
+                name="name"
+                placeholder="Name"
+                onChange={(event) => handleFormChange(event, index)}
+                value={form.name}
+              />
+              <input
+                name="age"
+                placeholder="Age"
+                onChange={(event) => handleFormChange(event, index)}
+                value={form.age}
+              />
+              <button onClick={() => removeFields(index)}>Remove</button>
+            </div>
+          );
+        })}
       </form>
+      <button onClick={addFields}>Add More..</button>
+      <button onClick={submit}>Submit</button>
+      <p>After clicking submit check console for data</p>
     </div>
   );
-};
+}
 
 export default App;
-
